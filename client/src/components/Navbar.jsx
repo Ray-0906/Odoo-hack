@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MessageCircle, Bell, Menu, X, LogOut } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const StackItNavbar = () => {
+const StackItNavbar = (loc) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -24,7 +24,7 @@ const StackItNavbar = () => {
     checkAuth();
     window.addEventListener('storage', checkAuth); // Sync across tabs
     return () => window.removeEventListener('storage', checkAuth);
-  }, []);
+  }, [loc]);
 
   const handleLogout = () => {
     localStorage.removeItem('soloAuth');
