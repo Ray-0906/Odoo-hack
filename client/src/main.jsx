@@ -9,6 +9,8 @@ import StackItLanding from './pages/Home.jsx';
 import AddQuestion from './pages/addQues.jsx';
 import StackItHomepage from './pages/View.jsx';
 import QuestionPage from './pages/QuestionDetail.jsx';
+import NotificationPage from './pages/Notice.jsx';
+import AnswerApprovalPage from './pages/ApprovalPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -20,7 +22,9 @@ const router = createBrowserRouter([
       { path: '/login', element: <Login /> },
       { path: '/signup', element: <Signup /> },
       { path: '/add', element: <AddQuestion /> },
+      { path: '/notices', element: <NotificationPage /> },
       { path: '/que/:id', element: <QuestionPage /> },
+      { path: '/approve/:answerId', element: <AnswerApprovalPage /> },
      
     ],
   },

@@ -67,6 +67,8 @@ export const logout = (req, res) => {
     .json({ msg: "Logged out successfully" });
 };
 
+
+
 // controllers/authController.js
 export const testAuth = (req, res) => {
   if (req.user) {

@@ -5,6 +5,8 @@ import { User } from "../Models/user.js";
 import dayjs from "dayjs";
 
 import relativeTime from "dayjs/plugin/relativeTime.js";
+import { pushNotification } from "./NotificationBox.js";
+
 dayjs.extend(relativeTime)
 
 export const addQuestion = async (req, res) => {
@@ -180,5 +182,44 @@ export const getQuestionDetail = async (req, res) => {
   } catch (error) {
     console.error("❌ Error fetching question detail:", error);
     return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+
+
+export const likeQuestion = async (req, res) => {
+  try {
+    const { id } = req.params; // question ID
+    const userId = req.user._id; // user performing the like
+
+    const question = await Question.findById(id);
+
+    if (!question) {
+      return res.status(404).json({ message: "Question not found" });
+    }
+
+    // Increment likes
+    question.likes += 1;
+    await question.save();
+
+    // Notify the author (if not the same user)
+    if (String(question.author) !== String(userId)) {
+      await pushNotification({
+        userId: question.author,
+        notifierId: userId,
+        kind: "like",
+        questionId: question._id
+      });
+    }
+
+    return res.status(200).json({
+      message: "Question liked successfully",
+      likes: question.likes
+    });
+
+  } catch (err) {
+    console.error("❌ Error liking question:", err);
+    return res.status(500).json({ message: "Server error" });
   }
 };
