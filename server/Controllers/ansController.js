@@ -48,32 +48,33 @@ export const addAnswer = async (req, res) => {
 
 export const voteAnswer = async (req, res) => {
   try {
-    const { id } = req.params; // answer ID
-    const { voteType } = req.body; // "upvote" or "downvote"
+    const { id } = req.params;
+    const { voteType } = req.body;
 
     if (!["upvote", "downvote"].includes(voteType)) {
       return res.status(400).json({ message: "Invalid vote type" });
     }
 
-    const increment = voteType === "upvote" ? 1 : -1;
+    const answer = await Answer.findById(id);
 
-    const updated = await Answer.findByIdAndUpdate(
-      id,
-      { $inc: { votes: increment } },
-      { new: true }
-    ).populate("author", "username");
-
-    if (!updated) {
+    if (!answer) {
       return res.status(404).json({ message: "Answer not found" });
     }
 
+    const increment = voteType === "upvote" ? 1 : -1;
+    const newVoteCount = Math.max(answer.votes + increment, 0); // ✅ never go below 0
+
+    answer.votes = newVoteCount;
+    await answer.save();
+
     return res.status(200).json({
       message: `Answer ${voteType}d successfully`,
-      votes: updated.votes,
-      answer: updated,
+      votes: newVoteCount,
+      answer,
     });
   } catch (err) {
     console.error("❌ Error voting answer:", err);
     return res.status(500).json({ message: "Server error" });
   }
 };
+

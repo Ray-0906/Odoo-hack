@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ChevronUp, ChevronDown, Check, Clock, User, Tag, MessageCircle, Edit3, Send, AlertCircle } from 'lucide-react';
-
+import { useParams } from "react-router-dom";
+import axiosInstance from "../utils/axios";
 const QuestionPage = () => {
   const [question, setQuestion] = useState(null);
   const [answers, setAnswers] = useState([]);
@@ -10,9 +11,10 @@ const QuestionPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [userVotes, setUserVotes] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(true); // Simulate login state
+  const { id: questionId } = useParams(); // 👈 now questionId is accessible
 
   // Mock data - in a real app, this would come from an API
-  const mockQuestion = {
+const mockQuestion = {
     id: 1,
     title: "How to implement efficient state management in React applications?",
     description: `I'm building a complex React application with multiple components that need to share state. I've been using useState and prop drilling, but it's becoming unwieldy as the app grows.
@@ -88,89 +90,93 @@ For your specific case, I'd recommend trying Context API first. Create separate 
     }
   ];
 
-  useEffect(() => {
-    // Simulate API call
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setQuestion(mockQuestion);
-        setAnswers(mockAnswers.sort((a, b) => {
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const res = await axiosInstance.get(`/ques/get/${questionId}`); // Pass the actual ID from route or props
+      const { question, answers } = res.data;
+
+      setQuestion(question);
+      setAnswers(
+        answers.sort((a, b) => {
           if (a.isAccepted && !b.isAccepted) return -1;
           if (!a.isAccepted && b.isAccepted) return 1;
           return b.votes - a.votes;
-        }));
-      } catch (err) {
-        setError('Failed to load question');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const handleVote = (answerId, voteType) => {
-    if (!isLoggedIn) return;
-
-    const currentVote = userVotes[answerId];
-    let newVoteValue = 0;
-
-    if (currentVote === voteType) {
-      // Remove vote if clicking the same button
-      newVoteValue = 0;
-    } else {
-      // Add new vote
-      newVoteValue = voteType === 'up' ? 1 : -1;
-    }
-
-    setUserVotes(prev => ({
-      ...prev,
-      [answerId]: newVoteValue === 0 ? undefined : (voteType === 'up' ? 'up' : 'down')
-    }));
-
-    setAnswers(prev => prev.map(answer => {
-      if (answer.id === answerId) {
-        let voteDiff = newVoteValue;
-        if (currentVote === 'up') voteDiff -= 1;
-        if (currentVote === 'down') voteDiff += 1;
-        
-        return {
-          ...answer,
-          votes: answer.votes + voteDiff
-        };
-      }
-      return answer;
-    }));
-  };
-
-  const handleSubmitAnswer = async () => {
-    if (!newAnswer.trim() || !isLoggedIn) return;
-
-    setSubmitting(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const newAnswerObj = {
-        id: Date.now(),
-        content: newAnswer,
-        author: "current_user",
-        createdAt: new Date().toISOString(),
-        votes: 0,
-        isAccepted: false
-      };
-
-      setAnswers(prev => [...prev, newAnswerObj]);
-      setNewAnswer('');
-      setQuestion(prev => ({ ...prev, answerCount: prev.answerCount + 1 }));
+        })
+      );
     } catch (err) {
-      setError('Failed to submit answer');
+      console.error(err);
+      setError("Failed to load question");
     } finally {
-      setSubmitting(false);
+      setLoading(false);
     }
   };
+
+  fetchData();
+}, []);
+
+
+const handleVote = async (answerId, voteType) => {
+  if (!isLoggedIn) return;
+
+  try {
+    const res = await axiosInstance.patch(`/ans/vote/${answerId}`, {
+      voteType: voteType === "up" ? "upvote" : "downvote"
+    }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+
+    const updatedVotes = res.data.votes;
+
+    setUserVotes((prev) => ({
+      ...prev,
+      [answerId]: voteType
+    }));
+
+    setAnswers((prev) =>
+      prev.map((a) =>
+        a.id === answerId || a._id === answerId
+          ? { ...a, votes: updatedVotes }
+          : a
+      )
+    );
+  } catch (err) {
+    console.error("Voting error:", err);
+    setError("Failed to vote");
+  }
+};
+
+
+
+const handleSubmitAnswer = async () => {
+  if (!newAnswer.trim() || !isLoggedIn) return;
+
+  setSubmitting(true);
+  try {
+    const res = await axiosInstance.post("/ans/add", {
+      content: newAnswer,
+      questionId: question.id,
+    });
+
+    const createdAnswer = res.data.answer;
+
+    setAnswers((prev) => [...prev, createdAnswer]);
+    setNewAnswer("");
+    setQuestion((prev) => ({
+      ...prev,
+      answerCount: prev.answerCount + 1
+    }));
+  } catch (err) {
+    console.error(err);
+    setError("Failed to submit answer");
+  } finally {
+    setSubmitting(false);
+  }
+};
+
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -235,7 +241,7 @@ For your specific case, I'd recommend trying Context API first. Create separate 
           <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
             <div className="flex items-center">
               <User className="h-4 w-4 mr-1" />
-              {question.author}
+              {question.author.username || question.author}
             </div>
             <div className="flex items-center">
               <Clock className="h-4 w-4 mr-1" />
@@ -255,8 +261,8 @@ For your specific case, I'd recommend trying Context API first. Create separate 
             <Tag className="h-4 w-4 text-gray-500" />
             <div className="flex space-x-2">
               {question.tags.map(tag => (
-                <span key={tag} className="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm">
-                  {tag}
+                <span key={typeof tag === "string" ? tag : tag._id || tag.id} className="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm">
+                  {typeof tag === "string" ? tag : tag.name}
                 </span>
               ))}
             </div>
@@ -270,7 +276,7 @@ For your specific case, I'd recommend trying Context API first. Create separate 
           </h2>
 
           {answers.map(answer => (
-            <div key={answer.id} className={`bg-white rounded-lg shadow-sm border p-6 ${
+            <div key={answer._id || answer.id} className={`bg-white rounded-lg shadow-sm border p-6 ${
               answer.isAccepted ? 'border-green-200 bg-green-50' : ''
             }`}>
               {answer.isAccepted && (
@@ -320,7 +326,7 @@ For your specific case, I'd recommend trying Context API first. Create separate 
                     <div className="flex items-center space-x-4">
                       <div className="flex items-center">
                         <User className="h-4 w-4 mr-1" />
-                        {answer.author}
+                        {answer.author.username || answer.author}
                       </div>
                       <div className="flex items-center">
                         <Clock className="h-4 w-4 mr-1" />
