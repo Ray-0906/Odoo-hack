@@ -20,13 +20,15 @@ import {
   Play,
   Sparkles
 } from 'lucide-react';
+import {  useNavigate } from "react-router-dom";
+
 
 const StackItLanding = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState({});
-
+ const navigate =useNavigate();
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     const handleMouseMove = (e) => setMousePosition({ x: e.clientX, y: e.clientY });
@@ -181,12 +183,12 @@ const StackItLanding = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-              <button className="group bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center relative overflow-hidden">
+              <button onClick={()=>{navigate('/add')}} className="group bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-indigo-700 translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
                 <span className="relative z-10">Ask a Question</span>
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform relative z-10" />
               </button>
-              <button className="group bg-white/80 backdrop-blur-sm text-gray-700 px-8 py-4 rounded-full text-lg font-semibold border border-white/20 hover:border-blue-300 hover:text-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl">
+              <button onClick={()=>{navigate('/home')}} className="group bg-white/80 backdrop-blur-sm text-gray-700 px-8 py-4 rounded-full text-lg font-semibold border border-white/20 hover:border-blue-300 hover:text-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl">
                 <span className="flex items-center">
                   <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
                   Browse Questions
@@ -334,7 +336,7 @@ const StackItLanding = () => {
               <p className="text-xl mb-8 opacity-90">
                 Start asking questions, sharing knowledge, and learning from the community today.
               </p>
-              <button className="bg-white text-blue-600 px-8 py-4 rounded-full text-lg font-semibold hover:shadow-2xl transform hover:scale-105 transition-all duration-300 hover:bg-gray-50">
+              <button onClick={()=>{navigate('/signup')}} className="bg-white text-blue-600 px-8 py-4 rounded-full text-lg font-semibold hover:shadow-2xl transform hover:scale-105 transition-all duration-300 hover:bg-gray-50">
                 Sign Up Free
               </button>
             </div>
