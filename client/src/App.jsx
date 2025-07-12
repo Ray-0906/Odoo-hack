@@ -1,12 +1,12 @@
 import React from 'react'
 import { Outlet } from "react-router-dom";
-
+import StackItNavbar from './components/Navbar';
 const App = () => {
   return (
-    <div>
-       <div className="text-2xl text-center text-blue-500">Hello Tailwind!</div>
+    <>
+       < StackItNavbar />
       <Outlet/>
-    </div>
+    </>
   )
 }
 
