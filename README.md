@@ -10,7 +10,7 @@
 
 | Name                | Email                        |
 |---------------------|------------------------------|
-| Asraful Hoque (TL)  | asraful.bros@gmail.com       |
+| Asraful Hoque (TL)  | astra3716@gmail.com          |
 | Aniket Tripathi     | 2023ugec007@nitjsr.ac.in     |
 | Arsh Khan           | 2023ugec007@nitjsr.ac.in     |
 
@@ -129,7 +129,7 @@ VITE_SERVER_URL=http://localhost:3000
 
 Have suggestions or want to contribute?
 
-📧 **asraful.bros@gmail.com**
+📧 **astra3716@gmail.com**
 
 ---
 
