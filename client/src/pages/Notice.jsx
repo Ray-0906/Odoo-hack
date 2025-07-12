@@ -14,6 +14,8 @@ import {
   X
 } from 'lucide-react';
 import axiosInstance from "../utils/axios";
+import { useNavigate } from "react-router-dom";
+
 const NotificationPage = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,6 +23,7 @@ const NotificationPage = () => {
   const [filter, setFilter] = useState('all');
   const [showFilter, setShowFilter] = useState(false);
   const [markingAllRead, setMarkingAllRead] = useState(false);
+  const navigate = useNavigate();
 
   // Mock notification data
   const mockNotifications = [
@@ -198,25 +201,19 @@ useEffect(() => {
     return date.toLocaleDateString();
   };
 
-  const handleNotificationClick = (notification) => {
-    // Mark as read
-    setNotifications(prev => 
-      prev.map(n => 
-        n.id === notification.id ? { ...n, isRead: true } : n
-      )
-    );
+const handleNotificationClick = (notification) => {
+  // Mark as read
+  setNotifications((prev) =>
+    prev.map((n) => (n.id === notification.id ? { ...n, isRead: true } : n))
+  );
 
-    // Navigate based on notification type
-    if (notification.type === 'answer') {
-      // Navigate to Answer Approval page
-      console.log(`Navigating to Answer Approval page for answer ${notification.answerId}`);
-      // In a real app: navigate(`/answer-approval/${notification.answerId}`);
-    } else if (notification.type === 'like' || notification.type === 'vote') {
-      // Navigate to Question Details page
-      console.log(`Navigating to Question Details page for question ${notification.questionId}`);
-      // In a real app: navigate(`/question/${notification.questionId}`);
-    }
-  };
+  if (notification.type === "answer" && notification.answerId) {
+    navigate(`/approve/${notification.answerId}`);
+  } else if (notification.questionId) {
+    navigate(`/que/${notification.questionId}`);
+  }
+};
+
 
   const handleMarkAllAsRead = async () => {
     setMarkingAllRead(true);

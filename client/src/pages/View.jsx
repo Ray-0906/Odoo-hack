@@ -425,11 +425,11 @@ const StackItHomepage = () => {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-600">Active Users</span>
-                      <span className="font-semibold">567</span>
+                      <span className="font-semibold">2</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-600">Answers Given</span>
-                      <span className="font-semibold">2,891</span>
+                      <span className="font-semibold">14</span>
                     </div>
                   </div>
                 </div>
