@@ -6,6 +6,9 @@ import session from 'express-session';
 import passport from 'passport';
 import  { conectDB } from './config/db.js';
 import authRoutes from './Routes/authRoutes.js';
+import queRoutes from './Routes/queRoutes.js';
+import {  seedTags } from './addtag.js';
+
 // Middleware
 app.use(cors({
     origin: `${process.env.CLIENT_URL}`,
@@ -31,10 +34,11 @@ app.use(passport.session());
 
 //paths 
 app.use('/auth', authRoutes);
+app.use('/ques', queRoutes);
 
 
 app.listen(3000, () => {
     conectDB();
-    
+    // seedTags();
     console.log('Server is running on port 3000');
 });
