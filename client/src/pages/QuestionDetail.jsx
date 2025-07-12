@@ -218,20 +218,9 @@ const handleSubmitAnswer = async () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen py-6 bg-gray-50">
       {/* Navigation Bar */}
-      <nav className="bg-white shadow-sm border-b">
-        <div className="max-w-4xl mx-auto px-4 py-3">
-          <div className="flex items-center space-x-4">
-            <button className="flex items-center text-gray-600 hover:text-blue-600 transition-colors">
-              <ArrowLeft className="h-5 w-5 mr-1" />
-              Back to Questions
-            </button>
-            <div className="text-gray-300">|</div>
-            <h1 className="text-xl font-bold text-gray-900">StackIt</h1>
-          </div>
-        </div>
-      </nav>
+      
 
       <div className="max-w-4xl mx-auto px-4 py-6">
         {/* Question Section */}

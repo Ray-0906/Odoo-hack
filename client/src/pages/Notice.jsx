@@ -296,28 +296,9 @@ useEffect(() => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50  mt-4">
       {/* Navigation Bar */}
-      <nav className="bg-white shadow-sm border-b">
-        <div className="max-w-4xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button className="flex items-center text-gray-600 hover:text-blue-600 transition-colors">
-                <ArrowLeft className="h-5 w-5 mr-1" />
-                Back
-              </button>
-              <div className="text-gray-300">|</div>
-              <h1 className="text-xl font-bold text-gray-900">StackIt</h1>
-            </div>
-            
-            {unreadCount > 0 && (
-              <div className="bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center">
-                {unreadCount}
-              </div>
-            )}
-          </div>
-        </div>
-      </nav>
+      
 
       <div className="max-w-4xl mx-auto px-4 py-6">
         {/* Header */}

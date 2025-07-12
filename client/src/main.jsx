@@ -11,6 +11,7 @@ import StackItHomepage from './pages/View.jsx';
 import QuestionPage from './pages/QuestionDetail.jsx';
 import NotificationPage from './pages/Notice.jsx';
 import AnswerApprovalPage from './pages/ApprovalPage.jsx';
+import AuthCheck from './components/authCheck.jsx';
 
 const router = createBrowserRouter([
   {
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
       { path: '/home', element: <StackItHomepage /> },
       { path: '/login', element: <Login /> },
       { path: '/signup', element: <Signup /> },
-      { path: '/add', element: <AddQuestion /> },
+      { path: '/add', element: <AuthCheck> <AddQuestion /> </AuthCheck>},
       { path: '/notices', element: <NotificationPage /> },
       { path: '/que/:id', element: <QuestionPage /> },
       { path: '/approve/:answerId', element: <AnswerApprovalPage /> },

@@ -179,7 +179,7 @@ const StackItHomepage = () => {
           : "Be the first to ask a question!"}
       </p>
       <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-200">
-        Ask the First Question
+      <Link to={'/add'}>  Ask the First Question</Link>
       </button>
     </div>
   );

@@ -17,6 +17,7 @@ import {
   BookOpen,
   Globe
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const StackItLanding = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -118,11 +119,11 @@ const StackItLanding = () => {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
               <button className="group bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center">
-                Ask a Question
+              <Link to={'/add'}>  Ask a Question</Link>
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
               <button className="bg-white text-gray-700 px-8 py-4 rounded-full text-lg font-semibold border-2 border-gray-200 hover:border-blue-300 hover:text-blue-600 transition-all duration-200">
-                Browse Questions
+               <Link to={'/home'}> Browse Questions</Link>
               </button>
             </div>
 
