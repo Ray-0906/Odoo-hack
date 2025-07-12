@@ -132,3 +132,53 @@ export const getAllTags= async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 }
+
+export const getQuestionDetail = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Fetch the question and populate author
+    const question = await Question.findById(id)
+      .populate("author", "username")
+      .lean(); // use .lean() for plain JS object
+
+    if (!question) {
+      return res.status(404).json({ message: "Question not found" });
+    }
+
+    // Fetch all answers related to the question
+    const answers = await Answer.find({ question: id })
+      .populate("author", "username")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    // Format the question
+    const formattedQuestion = {
+      id: question._id,
+      title: question.title,
+      description: stripHtml(question.description),
+      author: question.author?.username || "Unknown",
+      createdAt: question.createdAt,
+      tags: question.tags,
+      answerCount: answers.length,
+    };
+
+    // Format answers
+    const formattedAnswers = answers.map((ans) => ({
+      id: ans._id,
+      content: stripHtml(ans.content),
+      author: ans.author?.username || "Unknown",
+      createdAt: ans.createdAt,
+      votes: ans.votes,
+      isAccepted: ans.isAccepted,
+    }));
+
+    return res.status(200).json({
+      question: formattedQuestion,
+      answers: formattedAnswers,
+    });
+  } catch (error) {
+    console.error("❌ Error fetching question detail:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};

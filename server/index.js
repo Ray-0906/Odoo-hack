@@ -7,6 +7,7 @@ import passport from 'passport';
 import  { conectDB } from './config/db.js';
 import authRoutes from './Routes/authRoutes.js';
 import queRoutes from './Routes/queRoutes.js';
+import ansRoutes from './Routes/ansRoute.js';
 import {  seedTags } from './addtag.js';
 
 // Middleware
@@ -35,6 +36,7 @@ app.use(passport.session());
 //paths 
 app.use('/auth', authRoutes);
 app.use('/ques', queRoutes);
+app.use('/ans', ansRoutes);
 
 
 app.listen(3000, () => {
