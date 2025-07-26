@@ -62,7 +62,7 @@ const Signup = () => {
       if (user) {
         localStorage.setItem("soloAuth", JSON.stringify(user));
         setTimeout(() => {
-          navigate("/dashboard");
+          navigate("/home");
         }, 1000);
       } else {
         setError("Invalid response from server.");
